@@ -7,6 +7,11 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-
+        <local:DragAndDropArea x:Name="dragAndDropArea"
+            Width="300" 
+            Height="200" 
+            FilesDropped="DragAndDropArea_FilesDropped"
+            AllowFiles="True"
+            AllowFolders="False"/>
     </Grid>
 </Window>

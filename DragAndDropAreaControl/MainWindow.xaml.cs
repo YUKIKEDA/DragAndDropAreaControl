@@ -19,6 +19,15 @@ namespace DragAndDropAreaControl
         public MainWindow()
         {
             InitializeComponent();
+            dragAndDropArea.AllowedExtensions = [".txt", ".pdf", ".docx"];
+        }
+
+        private void DragAndDropArea_FilesDropped(string[] files)
+        {
+            foreach (string file in files)
+            {
+                MessageBox.Show($"ファイルがドロップされました: {file}");
+            }
         }
     }
 }
