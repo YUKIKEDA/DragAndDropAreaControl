@@ -12,6 +12,8 @@
             Height="200" 
             FilesDropped="DragAndDropArea_FilesDropped"
             AllowFiles="True"
-            AllowFolders="False"/>
+            AllowFolders="False"
+            AllowMultipleFiles="False"
+            MaxFileSize="10485760"/>
     </Grid>
 </Window>
