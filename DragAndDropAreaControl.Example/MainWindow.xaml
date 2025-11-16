@@ -24,12 +24,12 @@
             FontWeight="Bold"
             Text="DragAndDropAreaControl サンプル" />
 
-        <!--  中央に DragAndDropArea を配置して見た目を確認できるようにする  -->
+        <!--  DragAndDropArea は内容に合わせた高さにし、下側の余白をなくす  -->
         <dd:DragAndDropArea
             Grid.Row="1"
-            Margin="32"
+            Margin="32,32,32,0"
             HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
+            VerticalAlignment="Top"
             AfterDropColor="#4000AAFF"
             AllowFile="True"
             AllowFolder="True"
