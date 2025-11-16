@@ -174,37 +174,37 @@ namespace DragAndDropAreaControl
                 new FrameworkPropertyMetadata(string.Empty));
 
         /// <summary>
-        /// ファイル選択ボタンに表示するアイコンを表す文字列を取得・設定します。
-        /// 利用側で Path アイコン名やフォントアイコン文字列など、扱いやすい形式を自由に使用できます。
+        /// ファイル選択ボタンに表示するアイコンコンテンツを取得・設定します。
+        /// ContentPresenter でそのまま表示されるため、Path / PackIcon / TextBlock など任意の要素を指定できます。
         /// </summary>
-        public string FileDropIcon
+        public object? FileDropIcon
         {
-            get => (string)GetValue(FileDropIconProperty);
+            get => GetValue(FileDropIconProperty);
             set => SetValue(FileDropIconProperty, value);
         }
 
         public static readonly DependencyProperty FileDropIconProperty =
             DependencyProperty.Register(
                 nameof(FileDropIcon),
-                typeof(string),
+                typeof(object),
                 typeof(DragAndDropArea),
-                new FrameworkPropertyMetadata(string.Empty));
+                new FrameworkPropertyMetadata(null));
 
         /// <summary>
-        /// フォルダ選択ボタンに表示するアイコンを表す文字列を取得・設定します。
+        /// フォルダ選択ボタンに表示するアイコンコンテンツを取得・設定します。
         /// </summary>
-        public string FolderDropIcon
+        public object? FolderDropIcon
         {
-            get => (string)GetValue(FolderDropIconProperty);
+            get => GetValue(FolderDropIconProperty);
             set => SetValue(FolderDropIconProperty, value);
         }
 
         public static readonly DependencyProperty FolderDropIconProperty =
             DependencyProperty.Register(
                 nameof(FolderDropIcon),
-                typeof(string),
+                typeof(object),
                 typeof(DragAndDropArea),
-                new FrameworkPropertyMetadata(string.Empty));
+                new FrameworkPropertyMetadata(null));
 
         /// <summary>
         /// バリデーションエラーなどが発生した際に表示するエラーメッセージを取得・設定します。

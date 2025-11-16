@@ -39,6 +39,28 @@
             DragOverlayColor="#1400FF00"
             FileDropText="ファイルを選択してください"
             FolderDropText="フォルダを選択してください"
-            HeaderText="ヘッドラインテキスト" />
+            HeaderText="ヘッドラインテキスト">
+
+            <!-- デフォルトのファイル／フォルダアイコンをサンプル側で指定 -->
+            <dd:DragAndDropArea.FileDropIcon>
+                <Path
+                    Width="32"
+                    Height="32"
+                    Stretch="Uniform"
+                    Stroke="Black"
+                    StrokeThickness="2"
+                    Data="M4,2 L20,2 L20,22 L4,22 Z" />
+            </dd:DragAndDropArea.FileDropIcon>
+
+            <dd:DragAndDropArea.FolderDropIcon>
+                <Path
+                    Width="32"
+                    Height="32"
+                    Stretch="Uniform"
+                    Stroke="Black"
+                    StrokeThickness="2"
+                    Data="M4,8 L10,8 L12,4 L20,4 L20,22 L4,22 Z" />
+            </dd:DragAndDropArea.FolderDropIcon>
+        </dd:DragAndDropArea>
     </Grid>
 </Window>
