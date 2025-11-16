@@ -335,10 +335,7 @@ namespace DragAndDropAreaControl
                 _clearButton.Click -= OnClearButtonClick;
             }
 
-            if (_fileList != null)
-            {
-                _fileList.RemoveHandler(Button.ClickEvent, _fileItemClearHandler);
-            }
+            _fileList?.RemoveHandler(Button.ClickEvent, _fileItemClearHandler);
 
             _fileButton = GetTemplateChild(PART_FileButton) as Button;
             _folderButton = GetTemplateChild(PART_FolderButton) as Button;
@@ -360,10 +357,7 @@ namespace DragAndDropAreaControl
                 _clearButton.Click += OnClearButtonClick;
             }
 
-            if (_fileList != null)
-            {
-                _fileList.AddHandler(Button.ClickEvent, _fileItemClearHandler, true);
-            }
+            _fileList?.AddHandler(Button.ClickEvent, _fileItemClearHandler, true);
         }
 
         private void OnFileButtonClick(object sender, RoutedEventArgs e)
