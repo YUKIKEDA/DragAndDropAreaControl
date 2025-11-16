@@ -384,36 +384,49 @@ namespace DragAndDropAreaControl
         {
             var dialog = new OpenFolderDialog
             {
-                // フォルダは常に 1 つだけ選択可能（AllowMultipleFiles の有無に関わらず）
-                Multiselect = false,
+                // AllowMultipleFolders に応じてダイアログ側の複数選択可否を切り替える
+                Multiselect = AllowMultipleFolders,
                 Title = "フォルダを選択してください"
             };
 
             if (dialog.ShowDialog() == true)
             {
-                if (!string.IsNullOrWhiteSpace(dialog.FolderName))
+                string[]? paths = null;
+
+                if (AllowMultipleFolders && dialog.FolderNames is { Length: > 0 } multi)
                 {
-                    var paths = new[] { dialog.FolderName };
-
-                    if (!ValidatePathsForDrop(paths, out var error))
-                    {
-                        HasError = true;
-                        ErrorMessage = error;
-                        IsDropped = false;
-                        return;
-                    }
-
-                    HandleSelectedPaths(paths);
-                    IsDropped = true;
-                    HasError = false;
-                    ErrorMessage = string.Empty;
+                    // 複数フォルダ選択時: すべてを対象とする
+                    paths = multi;
                 }
+                else if (!string.IsNullOrWhiteSpace(dialog.FolderName))
+                {
+                    // 単一フォルダ選択時
+                    paths = [dialog.FolderName];
+                }
+
+                if (paths is null || paths.Length == 0)
+                {
+                    return;
+                }
+
+                if (!ValidatePathsForDrop(paths, out var error))
+                {
+                    HasError = true;
+                    ErrorMessage = error;
+                    IsDropped = false;
+                    return;
+                }
+
+                HandleSelectedPaths(paths);
+                IsDropped = true;
+                HasError = false;
+                ErrorMessage = string.Empty;
             }
         }
 
         private void OnClearButtonClick(object? sender, RoutedEventArgs e)
         {
-            DroppedFiles = Array.Empty<string>();
+            DroppedFiles = [];
             ErrorMessage = string.Empty;
             IsDropped = false;
             HasError = false;
