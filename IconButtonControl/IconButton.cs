@@ -1,13 +1,5 @@
-﻿using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace IconButtonControl
 {
@@ -40,11 +32,48 @@ namespace IconButtonControl
     ///     <MyNamespace:CustomControl1/>
     ///
     /// </summary>
-    public class IconButton : Control
+    public class IconButton : Button
     {
         static IconButton()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(IconButton), new FrameworkPropertyMetadata(typeof(IconButton)));
         }
+
+        #region 依存関係プロパティ
+
+        /// <summary>
+        /// ボタンに表示するアイコン文字列を取得・設定します。
+        /// フォントアイコンやテキストベースのアイコンを想定しています。
+        /// </summary>
+        public string Icon
+        {
+            get => (string)GetValue(IconProperty);
+            set => SetValue(IconProperty, value);
+        }
+
+        public static readonly DependencyProperty IconProperty =
+            DependencyProperty.Register(
+                nameof(Icon),
+                typeof(string),
+                typeof(IconButton),
+                new FrameworkPropertyMetadata(string.Empty));
+
+        /// <summary>
+        /// ボタンに表示するテキストを取得・設定します。
+        /// </summary>
+        public string Text
+        {
+            get => (string)GetValue(TextProperty);
+            set => SetValue(TextProperty, value);
+        }
+
+        public static readonly DependencyProperty TextProperty =
+            DependencyProperty.Register(
+                nameof(Text),
+                typeof(string),
+                typeof(IconButton),
+                new FrameworkPropertyMetadata(string.Empty));
+
+        #endregion
     }
 }

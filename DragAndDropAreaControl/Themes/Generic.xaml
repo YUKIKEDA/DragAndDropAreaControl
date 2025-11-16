@@ -1,74 +1,115 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:DragAndDropAreaControl">
+    xmlns:local="clr-namespace:DragAndDropAreaControl"
+    xmlns:icon="clr-namespace:IconButtonControl;assembly=IconButtonControl">
     <Style TargetType="{x:Type local:DragAndDropArea}">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="BorderBrush" Value="#FFCCCCCC" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="16" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:DragAndDropArea}">
-
-                    <!--  TODO:ƒtƒ@ƒCƒ‹^ƒtƒHƒ‹ƒ_‚ðƒhƒ‰ƒbƒOƒI[ƒo[‚µ‚½Û‚ÉAƒI[ƒo[ƒŒƒC‚ª•\Ž¦‚³‚ê‚é‚æ‚¤‚É‚µ‚½‚¢  -->
                     <Border
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}">
-
                         <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
+                            <!-- ãƒ¡ã‚¤ãƒ³ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆ -->
+                            <Grid Margin="{TemplateBinding Padding}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
 
-                            <TextBlock
-                                Grid.Row="0"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                FontSize="16"
-                                FontWeight="Bold"
-                                Text="TODO HeaderTextƒvƒƒpƒeƒB‚ðƒoƒCƒ“ƒh‚·‚é" />
-
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1" />
-                                    <ColumnDefinition Width="1" />
-                                </Grid.ColumnDefinitions>
-
-                                <!--  ƒtƒ@ƒCƒ‹‘I‘ðƒ_ƒCƒAƒƒO  -->
-                                <IconButton Grid.Column="0" />
-
-                                <!--  ƒtƒHƒ‹ƒ_‘I‘ðƒ_ƒCƒAƒƒO  -->
-                                <IconButton Grid.Column="1" />
-                            </Grid>
-
-
-                            <!--  ƒhƒƒbƒv‚³‚ê‚½ƒtƒ@ƒCƒ‹^ƒtƒHƒ‹ƒ_‚ð•\Ž¦‚·‚é  -->
-                            <!--  TODO:@•¡”ƒtƒ@ƒCƒ‹ƒhƒƒbƒv‚É‘Î‰ž‚·‚é‚½‚ß‚ÉƒAƒCƒeƒ€ƒRƒ“ƒgƒ[ƒ‹‚É‚µ‚½‚Ù‚¤‚ª‚¢‚¢‚©‚à  -->
-                            <Grid Grid.Row="2">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-
+                                <!-- ãƒ˜ãƒƒãƒ€ãƒ¼ -->
                                 <TextBlock
-                                    Grid.Column="0"
+                                    Grid.Row="0"
+                                    Margin="0,0,0,12"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    FontSize="14"
-                                    Text="TODO ‚±‚±‚Éƒhƒƒbƒv‚³‚ê‚½ƒtƒ@ƒCƒ‹‚ÌƒpƒX‚Ü‚½‚Íƒtƒ@ƒCƒ‹–¼‚ð•\Ž¦‚·‚é" />
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Foreground="#FFEE5555"
+                                    Text="{TemplateBinding HeaderText}" />
 
-                                <!--  íœƒ{ƒ^ƒ“  -->
-                                <IconButton Grid.Column="1" />
+                                <!-- ãƒ•ã‚¡ã‚¤ãƒ«ï¼ãƒ•ã‚©ãƒ«ãƒ€é¸æŠžãƒœã‚¿ãƒ³ -->
+                                <Grid Grid.Row="1" Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <icon:IconButton
+                                        Grid.Column="0"
+                                        Margin="0,0,8,0"
+                                        Icon="{TemplateBinding FileDropIcon}"
+                                        Text="{TemplateBinding FileDropText}" />
+
+                                    <icon:IconButton
+                                        Grid.Column="1"
+                                        Margin="8,0,0,0"
+                                        Icon="{TemplateBinding FolderDropIcon}"
+                                        Text="{TemplateBinding FolderDropText}" />
+                                </Grid>
+
+                                <!-- ãƒ‰ãƒ­ãƒƒãƒ—ã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«è¡¨ç¤ºï¼‹å‰Šé™¤ãƒœã‚¿ãƒ³ -->
+                                <Grid Grid.Row="2" Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Border
+                                        Grid.Column="0"
+                                        Background="#FFF9F9F9"
+                                        BorderBrush="#FFDDDDDD"
+                                        BorderThickness="1"
+                                        CornerRadius="4"
+                                        Padding="8">
+                                        <!-- TODO: è¤‡æ•°ãƒ•ã‚¡ã‚¤ãƒ«å¯¾å¿œã¯æ¬¡ã‚¹ãƒ†ãƒƒãƒ—ã§ ItemsControl ã«å¤‰æ›´ -->
+                                        <TextBlock
+                                            FontSize="12"
+                                            Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DroppedFiles[0], FallbackValue=ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã¾ã é¸æŠžã—ã¦ã„ã¾ã›ã‚“}" />
+                                    </Border>
+
+                                    <icon:IconButton
+                                        Grid.Column="1"
+                                        Margin="8,0,0,0"
+                                        Width="80"
+                                        Icon="Ã—"
+                                        Text="" />
+                                </Grid>
+
+                                <!-- ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ -->
+                                <TextBlock
+                                    Grid.Row="3"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    FontSize="12"
+                                    Foreground="#FFDD5555"
+                                    Text="{TemplateBinding ErrorMessage}" />
                             </Grid>
 
-                            <TextBlock
-                                Grid.Row="3"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                FontSize="12"
-                                Text="TODO ErrorMessageƒvƒƒpƒeƒB‚ðƒoƒCƒ“ƒh‚·‚é" />
-
+                            <!-- ã‚ªãƒ¼ãƒãƒ¼ãƒ¬ã‚¤ãƒ¬ã‚¤ãƒ¤ãƒ¼ï¼šãƒ‰ãƒ©ãƒƒã‚°ã‚ªãƒ¼ãƒãƒ¼ï¼ãƒ‰ãƒ­ãƒƒãƒ—å¾Œï¼ã‚¨ãƒ©ãƒ¼ -->
+                            <Border
+                                x:Name="DragOverlay"
+                                Background="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DragOverlayColor}"
+                                Opacity="0"
+                                Visibility="Collapsed" />
+                            <Border
+                                x:Name="AfterDropOverlay"
+                                Background="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=AfterDropColor}"
+                                Opacity="0"
+                                Visibility="Collapsed" />
+                            <Border
+                                x:Name="ErrorOverlay"
+                                Background="#40FF0000"
+                                Opacity="0"
+                                Visibility="Collapsed" />
                         </Grid>
                     </Border>
                 </ControlTemplate>

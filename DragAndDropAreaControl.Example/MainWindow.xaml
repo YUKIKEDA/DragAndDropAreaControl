@@ -4,10 +4,37 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DragAndDropAreaControl.Example"
+        xmlns:dd="clr-namespace:DragAndDropAreaControl;assembly=DragAndDropAreaControl"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="DragAndDropAreaControl Example"
+        Width="900"
+        Height="700">
+    <Grid Background="#FFEFEFEF">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
+        <!-- タイトル -->
+        <TextBlock
+            Grid.Row="0"
+            Margin="16"
+            FontSize="20"
+            FontWeight="Bold"
+            Text="DragAndDropAreaControl サンプル" />
+
+        <!-- 中央に DragAndDropArea を配置して見た目を確認できるようにする -->
+        <dd:DragAndDropArea
+            Grid.Row="1"
+            Margin="32"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            HeaderText="ヘッドラインテキスト"
+            FileDropText="ファイルを選択してください"
+            FolderDropText="フォルダを選択してください"
+            FileDropIcon="📄"
+            FolderDropIcon="📁"
+            DragOverlayColor="#4000FF00"
+            AfterDropColor="#4000AAFF" />
     </Grid>
 </Window>

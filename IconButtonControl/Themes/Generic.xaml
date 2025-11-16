@@ -3,13 +3,57 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:IconButtonControl">
     <Style TargetType="{x:Type local:IconButton}">
+        <Setter Property="Background" Value="#FFF2F2F2" />
+        <Setter Property="BorderBrush" Value="#FFB0B0B0" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="Cursor" Value="Hand" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:IconButton}">
                     <Border
+                        x:Name="border"
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}" />
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="8">
+                        <Grid>
+                            <StackPanel
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Orientation="Vertical"
+                                Margin="4">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    FontSize="32"
+                                    FontWeight="Bold"
+                                    Text="{TemplateBinding Icon}" />
+                                <TextBlock
+                                    x:Name="TextBlock"
+                                    Margin="0,8,0,0"
+                                    HorizontalAlignment="Center"
+                                    FontSize="12"
+                                    Text="{TemplateBinding Text}" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="#FFE6E6E6" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="#FFD0D0D0" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="border" Property="Opacity" Value="0.6" />
+                        </Trigger>
+                        <!-- テキストが空の場合はテキスト行自体を消して余白をなくす -->
+                        <!-- IconButton.Text が空のときに TextBlock を非表示にする -->
+                        <Trigger Property="Text" Value="">
+                            <Setter TargetName="TextBlock" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="TextBlock" Property="Margin" Value="0" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
