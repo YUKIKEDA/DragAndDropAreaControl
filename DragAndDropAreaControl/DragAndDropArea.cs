@@ -604,14 +604,28 @@ namespace DragAndDropAreaControl
 
         private void HandleSelectedPaths(string[] paths)
         {
-            if (!AllowMultipleFiles && paths.Length > 1)
+            if (paths is null || paths.Length == 0)
+            {
+                return;
+            }
+
+            // 単一ファイルのみ許可の場合は、常に先頭の1件だけを保持（既存のものは上書き）
+            if (!AllowMultipleFiles)
             {
                 DroppedFiles = [paths[0]];
+                return;
             }
-            else
-            {
-                DroppedFiles = paths;
-            }
+
+            // 複数ファイル許可の場合は、既存の DroppedFiles に新しいパスを追加していく
+            var current = DroppedFiles ?? [];
+
+            var merged = current
+                .Concat(paths)
+                // 同じパスが重複しても見た目がうるさいので一応重複排除（大文字小文字は無視）
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+
+            DroppedFiles = merged;
         }
 
         private string BuildOpenFileDialogFilter()

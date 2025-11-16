@@ -33,7 +33,7 @@
             AfterDropColor="#14000000"
             AllowFile="True"
             AllowFolder="True"
-            AllowMultipleFiles="False"
+            AllowMultipleFiles="True"
             AllowedExtensions=".png"
             DragOverlayColor="#1400FF00"
             FileDropText="ファイルを選択してください"
