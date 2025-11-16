@@ -145,7 +145,22 @@
                                     VerticalAlignment="Center"
                                     FontSize="12"
                                     Foreground="#FFDD5555"
-                                    Text="{TemplateBinding ErrorMessage}" />
+                                    Text="{TemplateBinding ErrorMessage}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <!-- ErrorMessage が空または null のときは非表示 -->
+                                            <Style.Triggers>
+                                                <Trigger Property="Text" Value="">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </Trigger>
+                                                <Trigger Property="Text" Value="{x:Null}">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
                             </Grid>
 
                             <!--  オーバーレイレイヤー：ドラッグオーバー／ドロップ後／エラー（視覚のみ／ヒットテスト無効）  -->
