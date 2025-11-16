@@ -25,16 +25,16 @@
                                 VerticalAlignment="Center"
                                 Orientation="Vertical"
                                 Margin="8">
-                                <!-- ベクターアイコン表示用 -->
-                                <Path
+
+                                <!-- アイコン表示部: Button.Content に任意コンテンツ（PackIcon, 画像, フォントアイコンなど）をそのまま表示 -->
+                                <ContentPresenter
+                                    x:Name="IconContentPresenter"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     Width="{TemplateBinding IconSize}"
                                     Height="{TemplateBinding IconSize}"
-                                    Stretch="Uniform"
-                                    Stroke="Black"
-                                    StrokeThickness="2"
-                                    Data="{TemplateBinding Icon}" />
+                                    Content="{TemplateBinding Content}" />
+
                                 <TextBlock
                                     x:Name="TextBlock"
                                     Margin="0,8,0,0"
@@ -54,6 +54,7 @@
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="border" Property="Opacity" Value="0.6" />
                         </Trigger>
+
                         <!-- テキストが空の場合はテキスト行自体を消して余白をなくす -->
                         <!-- IconButton.Text が空のときに TextBlock を非表示にする -->
                         <Trigger Property="Text" Value="">

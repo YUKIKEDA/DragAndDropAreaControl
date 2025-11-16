@@ -52,15 +52,29 @@
                                         x:Name="PART_FileButton"
                                         Grid.Column="0"
                                         Margin="0,0,8,0"
-                                        Icon="{StaticResource FileIconGeometry}"
-                                        Text="{TemplateBinding FileDropText}" />
+                                        Text="{TemplateBinding FileDropText}">
+                                        <Path
+                                            Width="{Binding IconSize, RelativeSource={RelativeSource AncestorType=icon:IconButton}}"
+                                            Height="{Binding IconSize, RelativeSource={RelativeSource AncestorType=icon:IconButton}}"
+                                            Stretch="Uniform"
+                                            Stroke="Black"
+                                            StrokeThickness="2"
+                                            Data="{StaticResource FileIconGeometry}" />
+                                    </icon:IconButton>
 
                                     <icon:IconButton
                                         x:Name="PART_FolderButton"
                                         Grid.Column="1"
                                         Margin="8,0,0,0"
-                                        Icon="{StaticResource FolderIconGeometry}"
-                                        Text="{TemplateBinding FolderDropText}" />
+                                        Text="{TemplateBinding FolderDropText}">
+                                        <Path
+                                            Width="{Binding IconSize, RelativeSource={RelativeSource AncestorType=icon:IconButton}}"
+                                            Height="{Binding IconSize, RelativeSource={RelativeSource AncestorType=icon:IconButton}}"
+                                            Stretch="Uniform"
+                                            Stroke="Black"
+                                            StrokeThickness="2"
+                                            Data="{StaticResource FolderIconGeometry}" />
+                                    </icon:IconButton>
                                 </Grid>
 
                                 <!--  ドロップされたファイル表示＋削除ボタン（1ファイル＝1アイテム）  -->
@@ -95,9 +109,16 @@
                                                     Width="40"
                                                     Margin="8,0,0,0"
                                                     Padding="8,2,8,0"
-                                                    Icon="{StaticResource ClearIconGeometry}"
                                                     IconSize="12"
-                                                    Text="" />
+                                                    Text="">
+                                                    <Path
+                                                        Width="{Binding IconSize, RelativeSource={RelativeSource AncestorType=icon:IconButton}}"
+                                                        Height="{Binding IconSize, RelativeSource={RelativeSource AncestorType=icon:IconButton}}"
+                                                        Stretch="Uniform"
+                                                        Stroke="Black"
+                                                        StrokeThickness="2"
+                                                        Data="{StaticResource ClearIconGeometry}" />
+                                                </icon:IconButton>
                                             </Grid>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
