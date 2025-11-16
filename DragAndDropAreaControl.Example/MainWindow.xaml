@@ -34,7 +34,7 @@
             AllowFile="True"
             AllowFolder="True"
             AllowMultipleFiles="True"
-            AllowedExtensions=".png"
+            AllowedExtensions="*.png"
             DragOverlayColor="#1400FF00"
             FileDropText="ファイルを選択してください"
             FolderDropText="フォルダを選択してください"
