@@ -112,7 +112,7 @@
                                 IsHitTestVisible="False" />
                             <Border
                                 x:Name="ErrorOverlay"
-                                Background="#40FF0000"
+                                Background="#14FF0000"
                                 Opacity="0"
                                 Visibility="Collapsed"
                                 IsHitTestVisible="False" />
