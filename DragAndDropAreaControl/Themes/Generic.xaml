@@ -33,7 +33,7 @@
                                     VerticalAlignment="Center"
                                     FontSize="16"
                                     FontWeight="Bold"
-                                    Foreground="#FFEE5555"
+                                    Foreground="Black"
                                     Text="{TemplateBinding HeaderText}" />
 
                                 <!-- ファイル／フォルダ選択ボタン -->
@@ -44,12 +44,14 @@
                                     </Grid.ColumnDefinitions>
 
                                     <icon:IconButton
+                                        x:Name="PART_FileButton"
                                         Grid.Column="0"
                                         Margin="0,0,8,0"
                                         Icon="{TemplateBinding FileDropIcon}"
                                         Text="{TemplateBinding FileDropText}" />
 
                                     <icon:IconButton
+                                        x:Name="PART_FolderButton"
                                         Grid.Column="1"
                                         Margin="8,0,0,0"
                                         Icon="{TemplateBinding FolderDropIcon}"
@@ -77,6 +79,7 @@
                                     </Border>
 
                                     <icon:IconButton
+                                        x:Name="PART_ClearButton"
                                         Grid.Column="1"
                                         Margin="8,0,0,0"
                                         Width="80"
@@ -94,24 +97,53 @@
                                     Text="{TemplateBinding ErrorMessage}" />
                             </Grid>
 
-                            <!-- オーバーレイレイヤー：ドラッグオーバー／ドロップ後／エラー -->
+                            <!-- オーバーレイレイヤー：ドラッグオーバー／ドロップ後／エラー（視覚のみ／ヒットテスト無効） -->
                             <Border
                                 x:Name="DragOverlay"
                                 Background="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DragOverlayColor}"
                                 Opacity="0"
-                                Visibility="Collapsed" />
+                                Visibility="Collapsed"
+                                IsHitTestVisible="False" />
                             <Border
                                 x:Name="AfterDropOverlay"
                                 Background="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=AfterDropColor}"
                                 Opacity="0"
-                                Visibility="Collapsed" />
+                                Visibility="Collapsed"
+                                IsHitTestVisible="False" />
                             <Border
                                 x:Name="ErrorOverlay"
                                 Background="#40FF0000"
                                 Opacity="0"
-                                Visibility="Collapsed" />
+                                Visibility="Collapsed"
+                                IsHitTestVisible="False" />
+
                         </Grid>
                     </Border>
+                    <ControlTemplate.Triggers>
+                                <!-- ドラッグオーバー中 -->
+                                <Trigger Property="IsDragOver" Value="True">
+                                    <Setter TargetName="DragOverlay" Property="Visibility" Value="Visible" />
+                                    <Setter TargetName="DragOverlay" Property="Opacity" Value="1" />
+                                    <Setter TargetName="AfterDropOverlay" Property="Visibility" Value="Collapsed" />
+                                    <Setter TargetName="ErrorOverlay" Property="Visibility" Value="Collapsed" />
+                                </Trigger>
+
+                                <!-- ドロップ完了 -->
+                                <Trigger Property="IsDropped" Value="True">
+                                    <Setter TargetName="AfterDropOverlay" Property="Visibility" Value="Visible" />
+                                    <Setter TargetName="AfterDropOverlay" Property="Opacity" Value="1" />
+                                    <Setter TargetName="DragOverlay" Property="Visibility" Value="Collapsed" />
+                                    <Setter TargetName="ErrorOverlay" Property="Visibility" Value="Collapsed" />
+                                </Trigger>
+
+                                <!-- エラー状態 -->
+                                <Trigger Property="HasError" Value="True">
+                                    <Setter TargetName="ErrorOverlay" Property="Visibility" Value="Visible" />
+                                    <Setter TargetName="ErrorOverlay" Property="Opacity" Value="1" />
+                                    <Setter TargetName="DragOverlay" Property="Visibility" Value="Collapsed" />
+                                    <Setter TargetName="AfterDropOverlay" Property="Visibility" Value="Collapsed" />
+                                </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

@@ -1,21 +1,22 @@
-﻿<Window x:Class="DragAndDropAreaControl.Example.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DragAndDropAreaControl.Example"
-        xmlns:dd="clr-namespace:DragAndDropAreaControl;assembly=DragAndDropAreaControl"
-        mc:Ignorable="d"
-        Title="DragAndDropAreaControl Example"
-        Width="900"
-        Height="700">
+﻿<Window
+    x:Class="DragAndDropAreaControl.Example.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dd="clr-namespace:DragAndDropAreaControl;assembly=DragAndDropAreaControl"
+    xmlns:local="clr-namespace:DragAndDropAreaControl.Example"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="DragAndDropAreaControl Example"
+    Width="900"
+    Height="700"
+    mc:Ignorable="d">
     <Grid Background="#FFEFEFEF">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- タイトル -->
+        <!--  タイトル  -->
         <TextBlock
             Grid.Row="0"
             Margin="16"
@@ -23,18 +24,21 @@
             FontWeight="Bold"
             Text="DragAndDropAreaControl サンプル" />
 
-        <!-- 中央に DragAndDropArea を配置して見た目を確認できるようにする -->
+        <!--  中央に DragAndDropArea を配置して見た目を確認できるようにする  -->
         <dd:DragAndDropArea
             Grid.Row="1"
             Margin="32"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
-            HeaderText="ヘッドラインテキスト"
-            FileDropText="ファイルを選択してください"
-            FolderDropText="フォルダを選択してください"
-            FileDropIcon="📄"
-            FolderDropIcon="📁"
+            AfterDropColor="#4000AAFF"
+            AllowFile="True"
+            AllowFolder="True"
+            AllowedExtensions=".png"
             DragOverlayColor="#4000FF00"
-            AfterDropColor="#4000AAFF" />
+            FileDropIcon="📄"
+            FileDropText="ファイルを選択してください"
+            FolderDropIcon="📁"
+            FolderDropText="フォルダを選択してください"
+            HeaderText="ヘッドラインテキスト" />
     </Grid>
 </Window>

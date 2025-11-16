@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿using System.IO;
+using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Win32;
 
 namespace DragAndDropAreaControl
 {
@@ -9,6 +11,11 @@ namespace DragAndDropAreaControl
     /// </summary>
     public class DragAndDropArea : Control
     {
+        public DragAndDropArea()
+        {
+            AllowDrop = true;
+        }
+
         static DragAndDropArea()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DragAndDropArea), new FrameworkPropertyMetadata(typeof(DragAndDropArea)));
@@ -227,6 +234,345 @@ namespace DragAndDropAreaControl
                 typeof(DragAndDropArea),
                 new FrameworkPropertyMetadata("#4000FF00"));
 
+        /// <summary>
+        /// ドラッグオーバー状態かどうかを示します。
+        /// </summary>
+        public bool IsDragOver
+        {
+            get => (bool)GetValue(IsDragOverProperty);
+            internal set => SetValue(IsDragOverProperty, value);
+        }
+
+        public static readonly DependencyProperty IsDragOverProperty =
+            DependencyProperty.Register(
+                nameof(IsDragOver),
+                typeof(bool),
+                typeof(DragAndDropArea),
+                new FrameworkPropertyMetadata(false));
+
+        /// <summary>
+        /// ドロップ完了状態かどうかを示します。
+        /// </summary>
+        public bool IsDropped
+        {
+            get => (bool)GetValue(IsDroppedProperty);
+            internal set => SetValue(IsDroppedProperty, value);
+        }
+
+        public static readonly DependencyProperty IsDroppedProperty =
+            DependencyProperty.Register(
+                nameof(IsDropped),
+                typeof(bool),
+                typeof(DragAndDropArea),
+                new FrameworkPropertyMetadata(false));
+
+        /// <summary>
+        /// エラー状態かどうかを示します。
+        /// </summary>
+        public bool HasError
+        {
+            get => (bool)GetValue(HasErrorProperty);
+            internal set => SetValue(HasErrorProperty, value);
+        }
+
+        public static readonly DependencyProperty HasErrorProperty =
+            DependencyProperty.Register(
+                nameof(HasError),
+                typeof(bool),
+                typeof(DragAndDropArea),
+                new FrameworkPropertyMetadata(false));
+
+
+        #endregion
+
+        #region テンプレート適用・ボタンイベント
+
+        private const string PART_FileButton = "PART_FileButton";
+        private const string PART_FolderButton = "PART_FolderButton";
+        private const string PART_ClearButton = "PART_ClearButton";
+
+        private Button? _fileButton;
+        private Button? _folderButton;
+        private Button? _clearButton;
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            if (_fileButton != null)
+            {
+                _fileButton.Click -= OnFileButtonClick;
+            }
+
+            if (_folderButton != null)
+            {
+                _folderButton.Click -= OnFolderButtonClick;
+            }
+
+            if (_clearButton != null)
+            {
+                _clearButton.Click -= OnClearButtonClick;
+            }
+
+            _fileButton = GetTemplateChild(PART_FileButton) as Button;
+            _folderButton = GetTemplateChild(PART_FolderButton) as Button;
+            _clearButton = GetTemplateChild(PART_ClearButton) as Button;
+
+            if (_fileButton != null)
+            {
+                _fileButton.Click += OnFileButtonClick;
+            }
+
+            if (_folderButton != null)
+            {
+                _folderButton.Click += OnFolderButtonClick;
+            }
+
+            if (_clearButton != null)
+            {
+                _clearButton.Click += OnClearButtonClick;
+            }
+        }
+
+        private void OnFileButtonClick(object sender, RoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog
+            {
+                Multiselect = AllowMultipleFiles,
+                Filter = BuildOpenFileDialogFilter()
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                HandleSelectedPaths(dialog.FileNames);
+            }
+        }
+
+        private void OnFolderButtonClick(object? sender, RoutedEventArgs e)
+        {
+            var dialog = new OpenFolderDialog
+            {
+                Multiselect = AllowMultipleFiles,
+                Title = "フォルダを選択してください"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                // 複数選択時は FolderNames、単一選択時は FolderName を使用
+                if (AllowMultipleFiles && dialog.FolderNames is { Length: > 0 } multi)
+                {
+                    HandleSelectedPaths(multi);
+                }
+                else if (!string.IsNullOrWhiteSpace(dialog.FolderName))
+                {
+                    HandleSelectedPaths(new[] { dialog.FolderName });
+                }
+            }
+        }
+
+        private void OnClearButtonClick(object? sender, RoutedEventArgs e)
+        {
+            DroppedFiles = Array.Empty<string>();
+            ErrorMessage = string.Empty;
+            IsDropped = false;
+            HasError = false;
+        }
+
+        #endregion
+
+        #region ドラッグ＆ドロップ処理
+
+        protected override void OnDragEnter(DragEventArgs e)
+        {
+            base.OnDragEnter(e);
+            IsDragOver = true;
+            HasError = false;
+            ErrorMessage = string.Empty;
+            ValidateDragData(e);
+        }
+
+        protected override void OnDragOver(DragEventArgs e)
+        {
+            base.OnDragOver(e);
+            ValidateDragData(e);
+        }
+
+        protected override void OnDragLeave(DragEventArgs e)
+        {
+            base.OnDragLeave(e);
+            IsDragOver = false;
+        }
+
+        protected override void OnDrop(DragEventArgs e)
+        {
+            base.OnDrop(e);
+
+            IsDragOver = false;
+
+            if (!e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effects = DragDropEffects.None;
+                return;
+            }
+
+            var paths = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (!ValidatePathsForDrop(paths, out var error))
+            {
+                HasError = true;
+                ErrorMessage = error;
+                IsDropped = false;
+                e.Effects = DragDropEffects.None;
+                return;
+            }
+
+            HandleSelectedPaths(paths);
+            IsDropped = true;
+            HasError = false;
+            ErrorMessage = string.Empty;
+            e.Effects = DragDropEffects.Copy;
+        }
+
+        private void ValidateDragData(DragEventArgs e)
+        {
+            if (!e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effects = DragDropEffects.None;
+                return;
+            }
+
+            var paths = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (ValidatePathsForDrop(paths, out _))
+            {
+                e.Effects = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effects = DragDropEffects.None;
+            }
+        }
+
+        private bool ValidatePathsForDrop(string[] paths, out string errorMessage)
+        {
+            errorMessage = string.Empty;
+
+            if (paths.Length == 0)
+            {
+                errorMessage = "ファイルまたはフォルダが見つかりません。";
+                return false;
+            }
+
+            if (!AllowMultipleFiles && paths.Length > 1)
+            {
+                errorMessage = "複数のファイル／フォルダは選択できません。";
+                return false;
+            }
+
+            foreach (var path in paths)
+            {
+                if (File.Exists(path))
+                {
+                    if (!AllowFile)
+                    {
+                        errorMessage = "ファイルの選択は許可されていません。";
+                        return false;
+                    }
+
+                    if (!IsExtensionAllowed(path))
+                    {
+                        errorMessage = "許可されていない拡張子のファイルが含まれています。";
+                        return false;
+                    }
+                }
+                else if (Directory.Exists(path))
+                {
+                    if (!AllowFolder)
+                    {
+                        errorMessage = "フォルダの選択は許可されていません。";
+                        return false;
+                    }
+                }
+                else
+                {
+                    errorMessage = "存在しないファイルまたはフォルダが含まれています。";
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private bool IsExtensionAllowed(string filePath)
+        {
+            if (string.IsNullOrWhiteSpace(AllowedExtensions))
+            {
+                // 制限なし
+                return true;
+            }
+
+            var ext = Path.GetExtension(filePath);
+            if (string.IsNullOrEmpty(ext))
+            {
+                return false;
+            }
+
+            var patterns = AllowedExtensions
+                .Split([';'], StringSplitOptions.RemoveEmptyEntries)
+                .Select(p => p.Trim())
+                .Where(p => !string.IsNullOrWhiteSpace(p))
+                .ToArray();
+
+            if (patterns.Length == 0)
+            {
+                return true;
+            }
+
+            foreach (var pattern in patterns)
+            {
+                if (pattern == "*" || pattern == "*.*")
+                {
+                    return true;
+                }
+
+                var normalized = pattern;
+                if (normalized.StartsWith("*.", StringComparison.Ordinal))
+                {
+                    normalized = normalized.Substring(1); // "*.png" -> ".png"
+                }
+                else if (!normalized.StartsWith('.'))
+                {
+                    normalized = "." + normalized;
+                }
+
+                if (string.Equals(normalized, ext, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void HandleSelectedPaths(string[] paths)
+        {
+            if (!AllowMultipleFiles && paths.Length > 1)
+            {
+                DroppedFiles = [paths[0]];
+            }
+            else
+            {
+                DroppedFiles = paths;
+            }
+        }
+
+        private string BuildOpenFileDialogFilter()
+        {
+            if (string.IsNullOrWhiteSpace(AllowedExtensions))
+            {
+                return "すべてのファイル|*.*";
+            }
+
+            return $"許可されたファイル|{AllowedExtensions}";
+        }
 
         #endregion
     }
