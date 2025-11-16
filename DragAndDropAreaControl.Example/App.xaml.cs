@@ -2,7 +2,7 @@
 using System.Data;
 using System.Windows;
 
-namespace DnDAreaControl.Example
+namespace DragAndDropAreaControl.Example
 {
     /// <summary>
     /// Interaction logic for App.xaml
