@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace DragAndDropAreaControl
+namespace IconButtonControl
 {
     /// <summary>
     /// Follow steps 1a or 1b and then 2 to use this custom control in a XAML file.
@@ -18,14 +18,14 @@ namespace DragAndDropAreaControl
     /// Add this XmlNamespace attribute to the root element of the markup file where it is 
     /// to be used:
     ///
-    ///     xmlns:MyNamespace="clr-namespace:DragAndDropAreaControl"
+    ///     xmlns:MyNamespace="clr-namespace:IconButtonControl"
     ///
     ///
     /// Step 1b) Using this custom control in a XAML file that exists in a different project.
     /// Add this XmlNamespace attribute to the root element of the markup file where it is 
     /// to be used:
     ///
-    ///     xmlns:MyNamespace="clr-namespace:DragAndDropAreaControl;assembly=DragAndDropAreaControl"
+    ///     xmlns:MyNamespace="clr-namespace:IconButtonControl;assembly=IconButtonControl"
     ///
     /// You will also need to add a project reference from the project where the XAML file lives
     /// to this project and Rebuild to avoid compilation errors:
@@ -40,68 +40,11 @@ namespace DragAndDropAreaControl
     ///     <MyNamespace:CustomControl1/>
     ///
     /// </summary>
-    public class DragAndDropArea : Control
+    public class IconButton : Control
     {
-        static DragAndDropArea()
+        static IconButton()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(DragAndDropArea), new FrameworkPropertyMetadata(typeof(DragAndDropArea)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(IconButton), new FrameworkPropertyMetadata(typeof(IconButton)));
         }
-
-        #region 依存関係プロパティ
-
-        public string[] DroppedFiles
-        {
-        }
-
-        public string AllowedExtensions
-        {
-        }
-
-        public bool AllowFile
-        {
-        }
-
-        public bool AllowFolder
-        {
-        }
-
-        public bool AllowMultipleFiles
-        {
-        }
-
-        public string FileDropText
-        {
-        }
-
-        public string FolderDropText
-        {
-        }
-
-        public string HeaderText
-        {
-        }
-
-        public string FileDropIcon
-        {
-        }
-
-        public string FolderDropIcon
-        {
-        }
-
-        public string ErrorMessage
-        {
-        }
-
-        public string DragOverlayColor
-        {
-        }
-
-        public string AfterDropColor
-        {
-        }
-
-
-        #endregion
     }
 }
