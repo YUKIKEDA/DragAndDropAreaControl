@@ -367,20 +367,29 @@ namespace DragAndDropAreaControl
         {
             var dialog = new OpenFolderDialog
             {
-                Multiselect = AllowMultipleFiles,
+                // フォルダは常に 1 つだけ選択可能（AllowMultipleFiles の有無に関わらず）
+                Multiselect = false,
                 Title = "フォルダを選択してください"
             };
 
             if (dialog.ShowDialog() == true)
             {
-                // 複数選択時は FolderNames、単一選択時は FolderName を使用
-                if (AllowMultipleFiles && dialog.FolderNames is { Length: > 0 } multi)
+                if (!string.IsNullOrWhiteSpace(dialog.FolderName))
                 {
-                    HandleSelectedPaths(multi);
-                }
-                else if (!string.IsNullOrWhiteSpace(dialog.FolderName))
-                {
-                    HandleSelectedPaths(new[] { dialog.FolderName });
+                    var paths = new[] { dialog.FolderName };
+
+                    if (!ValidatePathsForDrop(paths, out var error))
+                    {
+                        HasError = true;
+                        ErrorMessage = error;
+                        IsDropped = false;
+                        return;
+                    }
+
+                    HandleSelectedPaths(paths);
+                    IsDropped = true;
+                    HasError = false;
+                    ErrorMessage = string.Empty;
                 }
             }
         }
@@ -612,20 +621,37 @@ namespace DragAndDropAreaControl
             // 単一ファイルのみ許可の場合は、常に先頭の1件だけを保持（既存のものは上書き）
             if (!AllowMultipleFiles)
             {
-                DroppedFiles = [paths[0]];
+                DroppedFiles = new[] { paths[0] };
                 return;
             }
 
-            // 複数ファイル許可の場合は、既存の DroppedFiles に新しいパスを追加していく
-            var current = DroppedFiles ?? [];
+            // 複数ファイル許可の場合:
+            // - ファイル ... 既存 + 新規をマージ（重複は除外）
+            // - フォルダ ... 合計 1 つだけ保持し、2つ目以降は上書き（最後に指定されたものを採用）
+            var current = DroppedFiles ?? Array.Empty<string>();
 
-            var merged = current
-                .Concat(paths)
-                // 同じパスが重複しても見た目がうるさいので一応重複排除（大文字小文字は無視）
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToArray();
+            var currentFiles = current.Where(File.Exists);
+            var currentFolder = current.LastOrDefault(Directory.Exists);
 
-            DroppedFiles = merged;
+            var newFiles = paths.Where(File.Exists).ToArray();
+            var newFolders = paths.Where(Directory.Exists).ToArray();
+
+            // フォルダは「最後に指定されたもの」を優先し、それ以外は破棄
+            var finalFolder = newFolders.Length > 0 ? newFolders[^1] : currentFolder;
+
+            var mergedFiles = currentFiles
+                .Concat(newFiles)
+                .Distinct(StringComparer.OrdinalIgnoreCase);
+
+            var result = mergedFiles.ToList();
+
+            if (!string.IsNullOrEmpty(finalFolder) &&
+                !result.Contains(finalFolder, StringComparer.OrdinalIgnoreCase))
+            {
+                result.Add(finalFolder);
+            }
+
+            DroppedFiles = result.ToArray();
         }
 
         private string BuildOpenFileDialogFilter()
