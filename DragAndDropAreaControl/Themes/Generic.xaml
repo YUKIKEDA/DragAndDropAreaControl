@@ -42,27 +42,30 @@
                                     Text="{TemplateBinding HeaderText}" />
 
                                 <!--  ファイル／フォルダ選択ボタン  -->
-                                <Grid Grid.Row="1" Margin="0,0,0,12">
+                                <Grid
+                                    x:Name="ButtonsGrid"
+                                    Grid.Row="1"
+                                    Margin="0,0,0,12">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition x:Name="FileColumn" Width="*" />
+                                        <ColumnDefinition x:Name="FolderColumn" Width="*" />
                                     </Grid.ColumnDefinitions>
 
-                                    <!-- IconButton.Content に FileDropIcon を渡し、IconButton 側の ContentPresenter で表示 -->
+                                    <!--  IconButton.Content に FileDropIcon を渡し、IconButton 側の ContentPresenter で表示  -->
                                     <icon:IconButton
                                         x:Name="PART_FileButton"
                                         Grid.Column="0"
                                         Margin="0,0,8,0"
-                                        Text="{TemplateBinding FileDropText}"
-                                        Content="{TemplateBinding FileDropIcon}" />
+                                        Content="{TemplateBinding FileDropIcon}"
+                                        Text="{TemplateBinding FileDropText}" />
 
-                                    <!-- 同様に FolderDropIcon を渡す -->
+                                    <!--  同様に FolderDropIcon を渡す  -->
                                     <icon:IconButton
                                         x:Name="PART_FolderButton"
                                         Grid.Column="1"
                                         Margin="8,0,0,0"
-                                        Text="{TemplateBinding FolderDropText}"
-                                        Content="{TemplateBinding FolderDropIcon}" />
+                                        Content="{TemplateBinding FolderDropIcon}"
+                                        Text="{TemplateBinding FolderDropText}" />
                                 </Grid>
 
                                 <!--  ドロップされたファイル表示＋削除ボタン（1ファイル＝1アイテム）  -->
@@ -102,15 +105,15 @@
                                                     <Path
                                                         Width="{Binding IconSize, RelativeSource={RelativeSource AncestorType=icon:IconButton}}"
                                                         Height="{Binding IconSize, RelativeSource={RelativeSource AncestorType=icon:IconButton}}"
+                                                        Data="{StaticResource ClearIconGeometry}"
                                                         Stretch="Uniform"
                                                         Stroke="Black"
-                                                        StrokeThickness="2"
-                                                        Data="{StaticResource ClearIconGeometry}" />
+                                                        StrokeThickness="2" />
                                                 </icon:IconButton>
                                             </Grid>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
-                                    <!-- ドロップされていない場合のプレースホルダ -->
+                                    <!--  ドロップされていない場合のプレースホルダ  -->
                                     <ItemsControl.Style>
                                         <Style TargetType="ItemsControl">
                                             <Setter Property="Template">
@@ -149,7 +152,7 @@
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Setter Property="Visibility" Value="Visible" />
-                                            <!-- ErrorMessage が空または null のときは非表示 -->
+                                            <!--  ErrorMessage が空または null のときは非表示  -->
                                             <Style.Triggers>
                                                 <Trigger Property="Text" Value="">
                                                     <Setter Property="Visibility" Value="Collapsed" />
@@ -186,6 +189,20 @@
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
+                        <!--  ファイル／フォルダボタンの表示制御  -->
+                        <Trigger Property="AllowFile" Value="False">
+                            <Setter TargetName="PART_FileButton" Property="Visibility" Value="Collapsed" />
+                            <!-- フォルダボタンのみ表示: ボタンを中央寄せにする -->
+                            <Setter TargetName="FileColumn" Property="ColumnDefinition.Width" Value="0" />
+                            <Setter TargetName="FolderColumn" Property="ColumnDefinition.Width" Value="*" />
+                        </Trigger>
+                        <Trigger Property="AllowFolder" Value="False">
+                            <Setter TargetName="PART_FolderButton" Property="Visibility" Value="Collapsed" />
+                            <!-- ファイルボタンのみ表示: ボタンを中央寄せにする -->
+                            <Setter TargetName="FileColumn" Property="ColumnDefinition.Width" Value="*" />
+                            <Setter TargetName="FolderColumn" Property="ColumnDefinition.Width" Value="0" />
+                        </Trigger>
+
                         <!--  ドラッグオーバー中  -->
                         <Trigger Property="IsDragOver" Value="True">
                             <Setter TargetName="DragOverlay" Property="Visibility" Value="Visible" />
