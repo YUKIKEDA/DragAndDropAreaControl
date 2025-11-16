@@ -35,9 +35,7 @@
             AllowFolder="True"
             AllowedExtensions=".png"
             DragOverlayColor="#1400FF00"
-            FileDropIcon="📄"
             FileDropText="ファイルを選択してください"
-            FolderDropIcon="📁"
             FolderDropText="フォルダを選択してください"
             HeaderText="ヘッドラインテキスト" />
     </Grid>

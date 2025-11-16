@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace IconButtonControl
 {
@@ -42,21 +43,37 @@ namespace IconButtonControl
         #region 依存関係プロパティ
 
         /// <summary>
-        /// ボタンに表示するアイコン文字列を取得・設定します。
-        /// フォントアイコンやテキストベースのアイコンを想定しています。
+        /// ボタンに表示するベクターアイコンを取得・設定します。
+        /// Path の Data として使用される Geometry を想定しています。
         /// </summary>
-        public string Icon
+        public Geometry Icon
         {
-            get => (string)GetValue(IconProperty);
+            get => (Geometry)GetValue(IconProperty);
             set => SetValue(IconProperty, value);
         }
 
         public static readonly DependencyProperty IconProperty =
             DependencyProperty.Register(
                 nameof(Icon),
-                typeof(string),
+                typeof(Geometry),
                 typeof(IconButton),
-                new FrameworkPropertyMetadata(string.Empty));
+                new FrameworkPropertyMetadata(null));
+
+        /// <summary>
+        /// アイコンの表示サイズを取得・設定します。
+        /// </summary>
+        public double IconSize
+        {
+            get => (double)GetValue(IconSizeProperty);
+            set => SetValue(IconSizeProperty, value);
+        }
+
+        public static readonly DependencyProperty IconSizeProperty =
+            DependencyProperty.Register(
+                nameof(IconSize),
+                typeof(double),
+                typeof(IconButton),
+                new FrameworkPropertyMetadata(32.0));
 
         /// <summary>
         /// ボタンに表示するテキストを取得・設定します。

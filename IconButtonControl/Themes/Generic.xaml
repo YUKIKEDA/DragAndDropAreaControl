@@ -8,6 +8,8 @@
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="12" />
         <Setter Property="Cursor" Value="Hand" />
+        <!-- ラベル用のフォントサイズ（デフォルト）。必要に応じて IconButton.FontSize を上書き可能 -->
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:IconButton}">
@@ -22,17 +24,22 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Orientation="Vertical"
-                                Margin="4">
-                                <TextBlock
+                                Margin="8">
+                                <!-- ベクターアイコン表示用 -->
+                                <Path
                                     HorizontalAlignment="Center"
-                                    FontSize="32"
-                                    FontWeight="Bold"
-                                    Text="{TemplateBinding Icon}" />
+                                    VerticalAlignment="Center"
+                                    Width="{TemplateBinding IconSize}"
+                                    Height="{TemplateBinding IconSize}"
+                                    Stretch="Uniform"
+                                    Stroke="Black"
+                                    StrokeThickness="2"
+                                    Data="{TemplateBinding Icon}" />
                                 <TextBlock
                                     x:Name="TextBlock"
                                     Margin="0,8,0,0"
                                     HorizontalAlignment="Center"
-                                    FontSize="12"
+                                    FontSize="{TemplateBinding FontSize}"
                                     Text="{TemplateBinding Text}" />
                             </StackPanel>
                         </Grid>
