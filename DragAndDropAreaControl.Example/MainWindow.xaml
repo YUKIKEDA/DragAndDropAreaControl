@@ -5,13 +5,19 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dd="clr-namespace:DragAndDropAreaControl;assembly=DragAndDropAreaControl"
     xmlns:local="clr-namespace:DragAndDropAreaControl.Example"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="DragAndDropAreaControl Example"
     Width="900"
     Height="700"
     mc:Ignorable="d">
+    <Window.DataContext>
+        <local:MainWindowViewModel />
+    </Window.DataContext>
+
     <Grid Background="#FFEFEFEF">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -22,45 +28,175 @@
             Margin="16"
             FontSize="20"
             FontWeight="Bold"
-            Text="DragAndDropAreaControl サンプル" />
+            Text="DragAndDropAreaControl サンプル（すべてのプロパティ + ReactiveProperty + MaterialDesign IconPack）" />
 
-        <!--  DragAndDropArea は内容に合わせた高さにし、下側の余白をなくす  -->
-        <dd:DragAndDropArea
+        <!--  設定パネル（ReactiveProperty でバインディング）  -->
+        <GroupBox
             Grid.Row="1"
-            Margin="32,32,32,0"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Top"
-            AfterDropColor="#14000000"
-            AllowFile="True"
-            AllowFolder="True"
-            AllowMultipleFiles="True"
-            AllowMultipleFolders="True"
-            AllowedExtensions="*.png"
-            DragOverlayColor="#1400FF00"
-            FileDropText="ファイルを選択してください"
-            FolderDropText="フォルダを選択してください"
-            HeaderText="ヘッドラインテキスト">
+            Margin="16,0,16,8"
+            Header="設定">
+            <Grid Margin="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-            <!-- デフォルトのファイル／フォルダアイコンをサンプル側で指定 -->
-            <dd:DragAndDropArea.FileDropIcon>
-                <Path
-                    Width="32"
-                    Height="32"
-                    Stretch="Uniform"
-                    Stroke="Black"
-                    StrokeThickness="2"
-                    Data="M4,2 L20,2 L20,22 L4,22 Z" />
-            </dd:DragAndDropArea.FileDropIcon>
+                <TextBlock Grid.Row="0" Grid.Column="0" Margin="0,0,4,4" VerticalAlignment="Center" Text="拡張子:" />
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="0,0,8,4"
+                    Text="{Binding AllowedExtensions.Value, UpdateSourceTrigger=PropertyChanged}" />
 
-            <dd:DragAndDropArea.FolderDropIcon>
-                <Path
-                    Width="32"
-                    Height="32"
-                    Stretch="Uniform"
-                    Stroke="Black"
-                    StrokeThickness="2"
-                    Data="M4,8 L10,8 L12,4 L20,4 L20,22 L4,22 Z" />
-            </dd:DragAndDropArea.FolderDropIcon>
-        </dd:DragAndDropArea>
+                <TextBlock Grid.Row="1" Grid.Column="0" Margin="0,0,4,4" VerticalAlignment="Center" Text="ヘッダー:" />
+                <TextBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="0,0,8,4"
+                    Text="{Binding HeaderText.Value, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Margin="0,0,4,4" VerticalAlignment="Center" Text="ファイルボタン:" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Margin="0,0,8,4"
+                    Text="{Binding FileDropText.Value, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Margin="0,0,4,4" VerticalAlignment="Center" Text="フォルダボタン:" />
+                <TextBox
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Margin="0,0,8,4"
+                    Text="{Binding FolderDropText.Value, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBlock Grid.Row="0" Grid.Column="2" Margin="8,0,4,4" VerticalAlignment="Center" Text="ドラッグ中色:" />
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="3"
+                    Margin="0,0,0,4"
+                    Text="{Binding DragOverlayColor.Value, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBlock Grid.Row="1" Grid.Column="2" Margin="8,0,4,4" VerticalAlignment="Center" Text="ドロップ後色:" />
+                <TextBox
+                    Grid.Row="1"
+                    Grid.Column="3"
+                    Margin="0,0,0,4"
+                    Text="{Binding AfterDropColor.Value, UpdateSourceTrigger=PropertyChanged}" />
+
+                <CheckBox
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Margin="8,0,4,4"
+                    IsChecked="{Binding AllowFile.Value}"
+                    Content="ファイル許可" />
+                <CheckBox
+                    Grid.Row="2"
+                    Grid.Column="3"
+                    Margin="0,0,0,4"
+                    IsChecked="{Binding AllowFolder.Value}"
+                    Content="フォルダ許可" />
+
+                <CheckBox
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    Margin="8,0,4,4"
+                    IsChecked="{Binding AllowMultipleFiles.Value}"
+                    Content="複数ファイル" />
+                <CheckBox
+                    Grid.Row="3"
+                    Grid.Column="3"
+                    Margin="0,0,0,4"
+                    IsChecked="{Binding AllowMultipleFolders.Value}"
+                    Content="複数フォルダ" />
+            </Grid>
+        </GroupBox>
+
+        <!--  メイン領域  -->
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!--  DragAndDropArea 本体（すべてのプロパティをバインド）  -->
+            <dd:DragAndDropArea
+                x:Name="DropArea"
+                Grid.Row="0"
+                Margin="32,0,32,8"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                AfterDropColor="{Binding AfterDropColor.Value}"
+                AllowFile="{Binding AllowFile.Value}"
+                AllowFolder="{Binding AllowFolder.Value}"
+                AllowMultipleFiles="{Binding AllowMultipleFiles.Value}"
+                AllowMultipleFolders="{Binding AllowMultipleFolders.Value}"
+                AllowedExtensions="{Binding AllowedExtensions.Value}"
+                DragOverlayColor="{Binding DragOverlayColor.Value}"
+                DroppedFiles="{Binding DroppedFiles.Value, Mode=TwoWay}"
+                FileDropText="{Binding FileDropText.Value}"
+                FolderDropText="{Binding FolderDropText.Value}"
+                HeaderText="{Binding HeaderText.Value}">
+
+                <!-- MaterialDesignThemes の PackIcon を利用したアイコン -->
+                <dd:DragAndDropArea.FileDropIcon>
+                    <materialDesign:PackIcon
+                        Width="32"
+                        Height="32"
+                        Kind="FileImageOutline" />
+                </dd:DragAndDropArea.FileDropIcon>
+
+                <dd:DragAndDropArea.FolderDropIcon>
+                    <materialDesign:PackIcon
+                        Width="32"
+                        Height="32"
+                        Kind="Folder" />
+                </dd:DragAndDropArea.FolderDropIcon>
+            </dd:DragAndDropArea>
+
+            <!--  状態・結果表示  -->
+            <Grid Grid.Row="1" Margin="32,0,32,32">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- 状態フラグ -->
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8">
+                    <TextBlock Margin="0,0,8,0" Text="IsDragOver:" />
+                    <TextBlock Margin="0,0,16,0" Text="{Binding ElementName=DropArea, Path=IsDragOver}" />
+
+                    <TextBlock Margin="0,0,8,0" Text="IsDropped:" />
+                    <TextBlock Margin="0,0,16,0" Text="{Binding ElementName=DropArea, Path=IsDropped}" />
+
+                    <TextBlock Margin="0,0,8,0" Text="HasError:" />
+                    <TextBlock Margin="0,0,16,0" Text="{Binding ElementName=DropArea, Path=HasError}" />
+
+                    <TextBlock Margin="0,0,8,0" Text="DroppedFiles Count:" />
+                    <TextBlock Text="{Binding DroppedFiles.Value.Length}" />
+                </StackPanel>
+
+                <!-- ドロップされたパス一覧 -->
+                <GroupBox Grid.Row="1" Header="DroppedFiles (ReactiveProperty 経由)">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding DroppedFiles.Value}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Margin="4,2" Text="{Binding}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </GroupBox>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>
