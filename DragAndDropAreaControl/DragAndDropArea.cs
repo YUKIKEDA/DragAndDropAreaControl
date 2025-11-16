@@ -11,6 +11,9 @@ namespace DragAndDropAreaControl
     /// </summary>
     public class DragAndDropArea : Control
     {
+        /// <summary>
+        /// <see cref="DragAndDropArea"/> クラスの新しいインスタンスを生成します。
+        /// </summary>
         public DragAndDropArea()
         {
             AllowDrop = true;
@@ -316,6 +319,9 @@ namespace DragAndDropAreaControl
         private ItemsControl? _fileList;
         private readonly RoutedEventHandler _fileItemClearHandler;
 
+        /// <summary>
+        /// テンプレート適用時に、テンプレート内のパーツとイベントハンドラを関連付けます。
+        /// </summary>
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -360,6 +366,10 @@ namespace DragAndDropAreaControl
             _fileList?.AddHandler(Button.ClickEvent, _fileItemClearHandler, true);
         }
 
+        /// <summary>
+        /// 「ファイルを選択」ボタンがクリックされたときのハンドラです。
+        /// ファイル選択ダイアログを表示し、選択されたパスを <see cref="DroppedFiles"/> に反映します。
+        /// </summary>
         private void OnFileButtonClick(object sender, RoutedEventArgs e)
         {
             var dialog = new OpenFileDialog
@@ -374,6 +384,10 @@ namespace DragAndDropAreaControl
             }
         }
 
+        /// <summary>
+        /// 「フォルダを選択」ボタンがクリックされたときのハンドラです。
+        /// フォルダ選択ダイアログを表示し、選択されたフォルダパスを <see cref="DroppedFiles"/> に反映します。
+        /// </summary>
         private void OnFolderButtonClick(object? sender, RoutedEventArgs e)
         {
             var dialog = new OpenFolderDialog
@@ -418,6 +432,10 @@ namespace DragAndDropAreaControl
             }
         }
 
+        /// <summary>
+        /// 全体のクリアボタンがクリックされたときのハンドラです。
+        /// 選択済みのファイル／フォルダおよびエラー状態をすべてリセットします。
+        /// </summary>
         private void OnClearButtonClick(object? sender, RoutedEventArgs e)
         {
             DroppedFiles = [];
@@ -426,6 +444,10 @@ namespace DragAndDropAreaControl
             HasError = false;
         }
 
+        /// <summary>
+        /// 各行のクリアボタン（×）がクリックされたときのハンドラです。
+        /// 対応する 1 行分のファイル／フォルダのみを <see cref="DroppedFiles"/> から削除します。
+        /// </summary>
         private void OnFileItemClearClick(object? sender, RoutedEventArgs e)
         {
             if (e.OriginalSource is not Button button)
@@ -458,6 +480,10 @@ namespace DragAndDropAreaControl
 
         #region ドラッグ＆ドロップ処理
 
+        /// <summary>
+        /// ファイル／フォルダがドラッグ領域に入ったときに呼び出されます。
+        /// ドラッグ状態フラグを更新し、ドロップ可能かどうかの事前検証を行います。
+        /// </summary>
         protected override void OnDragEnter(DragEventArgs e)
         {
             base.OnDragEnter(e);
@@ -467,18 +493,30 @@ namespace DragAndDropAreaControl
             ValidateDragData(e);
         }
 
+        /// <summary>
+        /// ファイル／フォルダがドラッグ領域上を移動しているときに呼び出されます。
+        /// ドロップ可能かどうかを継続的に検証し、カーソルの表示を更新します。
+        /// </summary>
         protected override void OnDragOver(DragEventArgs e)
         {
             base.OnDragOver(e);
             ValidateDragData(e);
         }
 
+        /// <summary>
+        /// ファイル／フォルダがドラッグ領域から離れたときに呼び出されます。
+        /// ドラッグ状態フラグをリセットします。
+        /// </summary>
         protected override void OnDragLeave(DragEventArgs e)
         {
             base.OnDragLeave(e);
             IsDragOver = false;
         }
 
+        /// <summary>
+        /// ファイル／フォルダがドロップされたときに呼び出されます。
+        /// ドロップされたパスの検証を行い、<see cref="DroppedFiles"/> と状態フラグを更新します。
+        /// </summary>
         protected override void OnDrop(DragEventArgs e)
         {
             base.OnDrop(e);
@@ -515,6 +553,10 @@ namespace DragAndDropAreaControl
             e.Effects = DragDropEffects.Copy;
         }
 
+        /// <summary>
+        /// ドラッグ中のデータがドロップ可能かどうかを判定し、<see cref="DragEventArgs.Effects"/> を設定します。
+        /// </summary>
+        /// <param name="e">ドラッグイベントの情報。</param>
         private void ValidateDragData(DragEventArgs e)
         {
             if (!e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -534,6 +576,12 @@ namespace DragAndDropAreaControl
             }
         }
 
+        /// <summary>
+        /// ドロップまたはダイアログで選択されたパスの配列について、許可条件に合致するか検証します。
+        /// </summary>
+        /// <param name="paths">検証対象のファイル／フォルダパスの配列。</param>
+        /// <param name="errorMessage">エラー時にユーザーへ表示するメッセージ。</param>
+        /// <returns>すべてのパスが有効な場合は <c>true</c>、それ以外は <c>false</c>。</returns>
         private bool ValidatePathsForDrop(string[] paths, out string errorMessage)
         {
             errorMessage = string.Empty;
@@ -584,6 +632,11 @@ namespace DragAndDropAreaControl
             return true;
         }
 
+        /// <summary>
+        /// 指定されたファイルパスが <see cref="AllowedExtensions"/> に基づき許可されているかを判定します。
+        /// </summary>
+        /// <param name="filePath">検証するファイルパス。</param>
+        /// <returns>許可されている場合は <c>true</c>、それ以外は <c>false</c>。</returns>
         private bool IsExtensionAllowed(string filePath)
         {
             if (string.IsNullOrWhiteSpace(AllowedExtensions))
@@ -635,6 +688,14 @@ namespace DragAndDropAreaControl
             return false;
         }
 
+        /// <summary>
+        /// 検証済みのファイル／フォルダパスを <see cref="DroppedFiles"/> に反映します。
+        /// <para>
+        /// ファイルは <see cref="AllowMultipleFiles"/> に従いマージ／上書きされ、
+        /// フォルダは <see cref="AllowMultipleFolders"/> に従い単一または複数としてマージされます。
+        /// </para>
+        /// </summary>
+        /// <param name="paths">追加・反映するファイル／フォルダパスの配列。</param>
         private void HandleSelectedPaths(string[] paths)
         {
             if (paths is null || paths.Length == 0)
