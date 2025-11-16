@@ -14,6 +14,7 @@ namespace DragAndDropAreaControl
         public DragAndDropArea()
         {
             AllowDrop = true;
+            _fileItemClearHandler = OnFileItemClearClick;
         }
 
         static DragAndDropArea()
@@ -290,10 +291,13 @@ namespace DragAndDropAreaControl
         private const string PART_FileButton = "PART_FileButton";
         private const string PART_FolderButton = "PART_FolderButton";
         private const string PART_ClearButton = "PART_ClearButton";
+        private const string PART_FileList = "PART_FileList";
 
         private Button? _fileButton;
         private Button? _folderButton;
         private Button? _clearButton;
+        private ItemsControl? _fileList;
+        private readonly RoutedEventHandler _fileItemClearHandler;
 
         public override void OnApplyTemplate()
         {
@@ -314,9 +318,15 @@ namespace DragAndDropAreaControl
                 _clearButton.Click -= OnClearButtonClick;
             }
 
+            if (_fileList != null)
+            {
+                _fileList.RemoveHandler(Button.ClickEvent, _fileItemClearHandler);
+            }
+
             _fileButton = GetTemplateChild(PART_FileButton) as Button;
             _folderButton = GetTemplateChild(PART_FolderButton) as Button;
             _clearButton = GetTemplateChild(PART_ClearButton) as Button;
+            _fileList = GetTemplateChild(PART_FileList) as ItemsControl;
 
             if (_fileButton != null)
             {
@@ -331,6 +341,11 @@ namespace DragAndDropAreaControl
             if (_clearButton != null)
             {
                 _clearButton.Click += OnClearButtonClick;
+            }
+
+            if (_fileList != null)
+            {
+                _fileList.AddHandler(Button.ClickEvent, _fileItemClearHandler, true);
             }
         }
 
@@ -376,6 +391,34 @@ namespace DragAndDropAreaControl
             ErrorMessage = string.Empty;
             IsDropped = false;
             HasError = false;
+        }
+
+        private void OnFileItemClearClick(object? sender, RoutedEventArgs e)
+        {
+            if (e.OriginalSource is not Button button)
+            {
+                return;
+            }
+
+            if (button.DataContext is not string path || string.IsNullOrWhiteSpace(path))
+            {
+                return;
+            }
+
+            if (DroppedFiles is null || DroppedFiles.Length == 0)
+            {
+                return;
+            }
+
+            var newFiles = DroppedFiles.Where(p => !string.Equals(p, path, StringComparison.OrdinalIgnoreCase)).ToArray();
+            DroppedFiles = newFiles;
+
+            if (newFiles.Length == 0)
+            {
+                IsDropped = false;
+                HasError = false;
+                ErrorMessage = string.Empty;
+            }
         }
 
         #endregion

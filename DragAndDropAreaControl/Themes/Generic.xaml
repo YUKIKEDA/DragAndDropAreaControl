@@ -63,37 +63,71 @@
                                         Text="{TemplateBinding FolderDropText}" />
                                 </Grid>
 
-                                <!--  ドロップされたファイル表示＋削除ボタン  -->
-                                <Grid Grid.Row="2" Margin="0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
+                                <!--  ドロップされたファイル表示＋削除ボタン（1ファイル＝1アイテム）  -->
+                                <ItemsControl
+                                    x:Name="PART_FileList"
+                                    Grid.Row="2"
+                                    Margin="0"
+                                    ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DroppedFiles}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="0,0,0,4">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
 
-                                    <Border
-                                        Grid.Column="0"
-                                        Padding="8,2,8,0"
-                                        Background="#FFF9F9F9"
-                                        BorderBrush="#FFDDDDDD"
-                                        BorderThickness="1"
-                                        CornerRadius="4">
-                                        <!--  TODO: 複数ファイル対応は次ステップで ItemsControl に変更  -->
-                                        <TextBlock
-                                            VerticalAlignment="Center"
-                                            FontSize="12"
-                                            Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DroppedFiles[0], FallbackValue=ファイルをまだ選択していません}" />
-                                    </Border>
+                                                <Border
+                                                    Grid.Column="0"
+                                                    Padding="8,2,8,0"
+                                                    Background="#FFF9F9F9"
+                                                    BorderBrush="#FFDDDDDD"
+                                                    BorderThickness="1"
+                                                    CornerRadius="4">
+                                                    <TextBlock
+                                                        VerticalAlignment="Center"
+                                                        FontSize="12"
+                                                        Text="{Binding}" />
+                                                </Border>
 
-                                    <icon:IconButton
-                                        x:Name="PART_ClearButton"
-                                        Grid.Column="1"
-                                        Width="40"
-                                        Margin="8,0,0,0"
-                                        Padding="8,2,8,0"
-                                        Icon="{StaticResource ClearIconGeometry}"
-                                        IconSize="12"
-                                        Text="" />
-                                </Grid>
+                                                <icon:IconButton
+                                                    Grid.Column="1"
+                                                    Width="40"
+                                                    Margin="8,0,0,0"
+                                                    Padding="8,2,8,0"
+                                                    Icon="{StaticResource ClearIconGeometry}"
+                                                    IconSize="12"
+                                                    Text="" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <!-- ドロップされていない場合のプレースホルダ -->
+                                    <ItemsControl.Style>
+                                        <Style TargetType="ItemsControl">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="ItemsControl">
+                                                        <TextBlock
+                                                            VerticalAlignment="Center"
+                                                            FontSize="12"
+                                                            Text="ファイルをまだ選択していません" />
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Style.Triggers>
+                                                <Trigger Property="HasItems" Value="True">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="ItemsControl">
+                                                                <ItemsPresenter />
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ItemsControl.Style>
+                                </ItemsControl>
 
                                 <!--  エラーメッセージ  -->
                                 <TextBlock
