@@ -418,6 +418,13 @@ namespace DragAndDropAreaControl
             var paths = (string[])e.Data.GetData(DataFormats.FileDrop);
             if (!ValidatePathsForDrop(paths, out var error))
             {
+                // すでに有効なファイル／フォルダが設定されている場合は、
+                // 一旦それらをクリアしたうえでエラー状態として扱う。
+                if (DroppedFiles is { Length: > 0 })
+                {
+                    DroppedFiles = [];
+                }
+
                 HasError = true;
                 ErrorMessage = error;
                 IsDropped = false;
