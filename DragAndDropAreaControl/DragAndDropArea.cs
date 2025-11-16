@@ -106,6 +106,23 @@ namespace DragAndDropAreaControl
                 new FrameworkPropertyMetadata(true));
 
         /// <summary>
+        /// 複数フォルダのドロップ／選択を許可するかどうかを示します。
+        /// </summary>
+        public bool AllowMultipleFolders
+        {
+            get => (bool)GetValue(AllowMultipleFoldersProperty);
+            set => SetValue(AllowMultipleFoldersProperty, value);
+        }
+
+        public static readonly DependencyProperty AllowMultipleFoldersProperty =
+            DependencyProperty.Register(
+                nameof(AllowMultipleFolders),
+                typeof(bool),
+                typeof(DragAndDropArea),
+                // 既存仕様と互換性を保つため、デフォルトは false（フォルダは合計 1 つのみ）
+                new FrameworkPropertyMetadata(false));
+
+        /// <summary>
         /// ファイル選択ボタンに表示するテキストを取得・設定します。
         /// </summary>
         public string FileDropText
@@ -618,40 +635,60 @@ namespace DragAndDropAreaControl
                 return;
             }
 
-            // 単一ファイルのみ許可の場合は、常に先頭の1件だけを保持（既存のものは上書き）
-            if (!AllowMultipleFiles)
-            {
-                DroppedFiles = new[] { paths[0] };
-                return;
-            }
-
-            // 複数ファイル許可の場合:
-            // - ファイル ... 既存 + 新規をマージ（重複は除外）
-            // - フォルダ ... 合計 1 つだけ保持し、2つ目以降は上書き（最後に指定されたものを採用）
             var current = DroppedFiles ?? Array.Empty<string>();
 
-            var currentFiles = current.Where(File.Exists);
-            var currentFolder = current.LastOrDefault(Directory.Exists);
+            // 現在のファイル／フォルダを分解
+            var currentFiles   = current.Where(File.Exists);
+            var currentFolders = current.Where(Directory.Exists).ToArray();
 
-            var newFiles = paths.Where(File.Exists).ToArray();
+            // 今回追加されたファイル／フォルダを分解
+            var newFiles   = paths.Where(File.Exists).ToArray();
             var newFolders = paths.Where(Directory.Exists).ToArray();
 
-            // フォルダは「最後に指定されたもの」を優先し、それ以外は破棄
-            var finalFolder = newFolders.Length > 0 ? newFolders[^1] : currentFolder;
+            // ---------- ファイルのマージ ----------
+            IEnumerable<string> nextFiles;
 
-            var mergedFiles = currentFiles
-                .Concat(newFiles)
-                .Distinct(StringComparer.OrdinalIgnoreCase);
-
-            var result = mergedFiles.ToList();
-
-            if (!string.IsNullOrEmpty(finalFolder) &&
-                !result.Contains(finalFolder, StringComparer.OrdinalIgnoreCase))
+            if (AllowMultipleFiles)
             {
-                result.Add(finalFolder);
+                // 既存 + 新規をマージ（重複は除外）
+                nextFiles = currentFiles
+                    .Concat(newFiles)
+                    .Distinct(StringComparer.OrdinalIgnoreCase);
+            }
+            else
+            {
+                // 単一ファイルのみ許可: 今回のファイルがあればその1件で上書き。
+                // （今回のドロップにファイルが含まれない場合は既存のファイルを維持）
+                var fileToKeep = newFiles.FirstOrDefault() ?? currentFiles.FirstOrDefault();
+                nextFiles = string.IsNullOrEmpty(fileToKeep)
+                    ? Enumerable.Empty<string>()
+                    : new[] { fileToKeep };
             }
 
-            DroppedFiles = result.ToArray();
+            // ---------- フォルダのマージ ----------
+            IEnumerable<string> nextFolders;
+
+            if (AllowMultipleFolders)
+            {
+                // フォルダも複数許可: 既存 + 新規をマージ（重複は除外）
+                nextFolders = currentFolders
+                    .Concat(newFolders)
+                    .Distinct(StringComparer.OrdinalIgnoreCase);
+            }
+            else
+            {
+                // フォルダは常に合計 1 つだけ:
+                // 今回のフォルダがあればそれで上書き、なければ既存を維持。
+                var folderToKeep = newFolders.LastOrDefault() ?? currentFolders.LastOrDefault();
+                nextFolders = string.IsNullOrEmpty(folderToKeep)
+                    ? Enumerable.Empty<string>()
+                    : new[] { folderToKeep };
+            }
+
+            // ファイル + フォルダを結合して DroppedFiles に反映
+            DroppedFiles = nextFiles
+                .Concat(nextFolders)
+                .ToArray();
         }
 
         private string BuildOpenFileDialogFilter()
