@@ -1,0 +1,65 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--  NASテキスト背景のGeometry（SVGから変換）  -->
+    <RectangleGeometry x:Key="NasBackgroundGeometryV2" Rect="11,451,1050,600" />
+
+    <!--  NASテキストのGeometry (N) - SVGのフォント定義から  -->
+    <PathGeometry x:Key="NasTextNGeometryV2" Figures="M 1454,0 L 1128,0 537,901 C 502,954 478,993 465,1020 L 461,1020 C 466,969 469,892 469,788 L 469,0 164,0 164,1434 512,1434 1081,561 C 1107,522 1131,483 1153,444 L 1157,444 C 1152,477 1149,543 1149,641 L 1149,1434 1454,1434 1454,0 Z">
+        <PathGeometry.Transform>
+            <TransformGroup>
+                <ScaleTransform ScaleX="0.276" ScaleY="0.276" />
+                <TranslateTransform X="28" Y="462" />
+            </TransformGroup>
+        </PathGeometry.Transform>
+    </PathGeometry>
+
+    <!--  NASテキストのGeometry (A) - SVGのフォント定義から  -->
+    <PathGeometry x:Key="NasTextAGeometryV2" Figures="M 1425,0 L 1073,0 971,319 461,319 360,0 10,0 532,1434 915,1434 1425,0 Z M 897,567 L 743,1049 C 732,1085 724,1128 719,1178 L 711,1178 C 708,1136 699,1094 686,1053 L 530,567 897,567 Z">
+        <PathGeometry.Transform>
+            <TransformGroup>
+                <ScaleTransform ScaleX="0.276" ScaleY="0.276" />
+                <TranslateTransform X="383" Y="462" />
+            </TransformGroup>
+        </PathGeometry.Transform>
+    </PathGeometry>
+
+    <!--  NASテキストのGeometry (S) - SVGのフォント定義から  -->
+    <PathGeometry x:Key="NasTextSGeometryV2" Figures="M 98,55 L 98,375 C 156,326 219,290 287,266 355,241 424,229 493,229 534,229 569,233 600,240 630,247 655,258 676,271 696,284 711,299 721,317 731,334 736,353 736,374 736,402 728,427 712,449 696,471 674,491 647,510 619,529 586,547 548,564 510,581 469,599 425,617 313,664 230,721 175,788 120,855 92,937 92,1032 92,1107 107,1171 137,1225 167,1278 208,1322 260,1357 311,1392 371,1417 439,1434 507,1450 579,1458 655,1458 730,1458 796,1454 854,1445 911,1436 964,1422 1013,1403 L 1013,1104 C 989,1121 963,1135 935,1148 906,1161 877,1171 847,1180 817,1188 787,1194 758,1198 728,1202 700,1204 673,1204 636,1204 603,1201 573,1194 543,1187 518,1177 497,1164 476,1151 460,1136 449,1119 438,1101 432,1081 432,1059 432,1035 438,1014 451,995 464,976 482,958 505,941 528,924 557,907 590,891 623,874 661,857 703,840 760,816 812,791 858,764 903,737 942,706 975,672 1008,638 1033,599 1050,556 1067,512 1076,461 1076,403 1076,323 1061,256 1031,202 1000,147 959,103 907,70 855,36 795,12 726,-3 657,-18 584,-25 507,-25 428,-25 354,-18 283,-5 212,8 150,28 98,55 Z">
+        <PathGeometry.Transform>
+            <TransformGroup>
+                <ScaleTransform ScaleX="0.276" ScaleY="0.276" />
+                <TranslateTransform X="773" Y="462" />
+            </TransformGroup>
+        </PathGeometry.Transform>
+    </PathGeometry>
+
+    <!--  完全なNASアイコン（色指定可能版、SVGベース）  -->
+    <ControlTemplate x:Key="NasIconTemplateV2">
+        <Viewbox>
+            <Canvas Width="1440" Height="1190">
+                <!--  文書アイコン（StlDocumentGeometryV2を再利用）  -->
+                <Path Data="{StaticResource StlDocumentGeometryV2}" Fill="{TemplateBinding Control.Foreground}" />
+
+                <!--  NASテキストの背景  -->
+                <Path Data="{StaticResource NasBackgroundGeometryV2}" 
+                      Fill="{TemplateBinding Control.Background}" 
+                      Stroke="{TemplateBinding Control.BorderBrush}" 
+                      StrokeThickness="18" 
+                      StrokeLineJoin="Round" />
+
+                <!--  NASテキスト - 簡易版（TextBlockを使用）  -->
+                <TextBlock
+                    Canvas.Left="28"
+                    Canvas.Top="462"
+                    FontFamily="Segoe UI"
+                    FontSize="494"
+                    FontWeight="Bold"
+                    Foreground="{TemplateBinding Control.BorderBrush}"
+                    Text="NAS" />
+            </Canvas>
+        </Viewbox>
+    </ControlTemplate>
+
+</ResourceDictionary>
+

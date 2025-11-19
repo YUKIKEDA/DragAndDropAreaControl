@@ -50,42 +50,72 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Margin="0,0,4,4" VerticalAlignment="Center" Text="拡張子:" />
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="0,0,4,4"
+                    VerticalAlignment="Center"
+                    Text="拡張子:" />
                 <TextBox
                     Grid.Row="0"
                     Grid.Column="1"
                     Margin="0,0,8,4"
                     Text="{Binding AllowedExtensions.Value, UpdateSourceTrigger=PropertyChanged}" />
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Margin="0,0,4,4" VerticalAlignment="Center" Text="ヘッダー:" />
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Margin="0,0,4,4"
+                    VerticalAlignment="Center"
+                    Text="ヘッダー:" />
                 <TextBox
                     Grid.Row="1"
                     Grid.Column="1"
                     Margin="0,0,8,4"
                     Text="{Binding HeaderText.Value, UpdateSourceTrigger=PropertyChanged}" />
 
-                <TextBlock Grid.Row="2" Grid.Column="0" Margin="0,0,4,4" VerticalAlignment="Center" Text="ファイルボタン:" />
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Margin="0,0,4,4"
+                    VerticalAlignment="Center"
+                    Text="ファイルボタン:" />
                 <TextBox
                     Grid.Row="2"
                     Grid.Column="1"
                     Margin="0,0,8,4"
                     Text="{Binding FileDropText.Value, UpdateSourceTrigger=PropertyChanged}" />
 
-                <TextBlock Grid.Row="3" Grid.Column="0" Margin="0,0,4,4" VerticalAlignment="Center" Text="フォルダボタン:" />
+                <TextBlock
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Margin="0,0,4,4"
+                    VerticalAlignment="Center"
+                    Text="フォルダボタン:" />
                 <TextBox
                     Grid.Row="3"
                     Grid.Column="1"
                     Margin="0,0,8,4"
                     Text="{Binding FolderDropText.Value, UpdateSourceTrigger=PropertyChanged}" />
 
-                <TextBlock Grid.Row="0" Grid.Column="2" Margin="8,0,4,4" VerticalAlignment="Center" Text="ドラッグ中色:" />
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Margin="8,0,4,4"
+                    VerticalAlignment="Center"
+                    Text="ドラッグ中色:" />
                 <TextBox
                     Grid.Row="0"
                     Grid.Column="3"
                     Margin="0,0,0,4"
                     Text="{Binding DragOverlayColor.Value, UpdateSourceTrigger=PropertyChanged}" />
 
-                <TextBlock Grid.Row="1" Grid.Column="2" Margin="8,0,4,4" VerticalAlignment="Center" Text="ドロップ後色:" />
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    Margin="8,0,4,4"
+                    VerticalAlignment="Center"
+                    Text="ドロップ後色:" />
                 <TextBox
                     Grid.Row="1"
                     Grid.Column="3"
@@ -96,27 +126,27 @@
                     Grid.Row="2"
                     Grid.Column="2"
                     Margin="8,0,4,4"
-                    IsChecked="{Binding AllowFile.Value}"
-                    Content="ファイル許可" />
+                    Content="ファイル許可"
+                    IsChecked="{Binding AllowFile.Value}" />
                 <CheckBox
                     Grid.Row="2"
                     Grid.Column="3"
                     Margin="0,0,0,4"
-                    IsChecked="{Binding AllowFolder.Value}"
-                    Content="フォルダ許可" />
+                    Content="フォルダ許可"
+                    IsChecked="{Binding AllowFolder.Value}" />
 
                 <CheckBox
                     Grid.Row="3"
                     Grid.Column="2"
                     Margin="8,0,4,4"
-                    IsChecked="{Binding AllowMultipleFiles.Value}"
-                    Content="複数ファイル" />
+                    Content="複数ファイル"
+                    IsChecked="{Binding AllowMultipleFiles.Value}" />
                 <CheckBox
                     Grid.Row="3"
                     Grid.Column="3"
                     Margin="0,0,0,4"
-                    IsChecked="{Binding AllowMultipleFolders.Value}"
-                    Content="複数フォルダ" />
+                    Content="複数フォルダ"
+                    IsChecked="{Binding AllowMultipleFolders.Value}" />
             </Grid>
         </GroupBox>
 
@@ -146,19 +176,29 @@
                 FolderDropText="{Binding FolderDropText.Value}"
                 HeaderText="{Binding HeaderText.Value}">
 
-                <!-- MaterialDesignThemes の PackIcon を利用したアイコン -->
+                <!--  STLアイコンテンプレートを利用したアイコン  -->
                 <dd:DragAndDropArea.FileDropIcon>
-                    <materialDesign:PackIcon
+                    <Control
                         Width="32"
                         Height="32"
-                        Kind="FileImageOutline" />
+                        Background="Black"
+                        BorderBrush="White"
+                        Foreground="Black"
+                        Template="{StaticResource StlIconTemplate}" />
                 </dd:DragAndDropArea.FileDropIcon>
 
                 <dd:DragAndDropArea.FolderDropIcon>
-                    <materialDesign:PackIcon
+                    <!--<materialDesign:PackIcon
                         Width="32"
                         Height="32"
-                        Kind="Folder" />
+                        Kind="Folder" />-->
+                    <Control
+                        Width="32"
+                        Height="32"
+                        Background="White"
+                        BorderBrush="Black"
+                        Foreground="Black"
+                        Template="{StaticResource StlIconTemplateV2}" />
                 </dd:DragAndDropArea.FolderDropIcon>
             </dd:DragAndDropArea>
 
@@ -169,8 +209,11 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <!-- 状態フラグ -->
-                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8">
+                <!--  状態フラグ  -->
+                <StackPanel
+                    Grid.Row="0"
+                    Margin="0,0,0,8"
+                    Orientation="Horizontal">
                     <TextBlock Margin="0,0,8,0" Text="IsDragOver:" />
                     <TextBlock Margin="0,0,16,0" Text="{Binding ElementName=DropArea, Path=IsDragOver}" />
 
@@ -184,7 +227,7 @@
                     <TextBlock Text="{Binding DroppedFiles.Value.Length}" />
                 </StackPanel>
 
-                <!-- ドロップされたパス一覧 -->
+                <!--  ドロップされたパス一覧  -->
                 <GroupBox Grid.Row="1" Header="DroppedFiles (ReactiveProperty 経由)">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <ItemsControl ItemsSource="{Binding DroppedFiles.Value}">

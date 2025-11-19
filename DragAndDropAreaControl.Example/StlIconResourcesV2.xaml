@@ -1,0 +1,59 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--  文書アイコンのGeometry（SVGから変換）  -->
+    <PathGeometry x:Key="StlDocumentGeometryV2" Figures="M 834,172 L 986,33 C 1000,21 1016,13 1035,13 L 1377,13 C 1413,13 1455,43 1455,93 L 1455,172 834,172 Z M 133,1203 L 133,309 C 133,265 173,231 211,231 L 1455,231 1455,1203 133,1203 Z" />
+
+    <!--  STLテキスト背景のGeometry（SVGから変換）  -->
+    <RectangleGeometry x:Key="StlBackgroundGeometryV2" Rect="21,451,1000,600" />
+
+    <!--  STLテキストのGeometry (S) - SVGのフォント定義から  -->
+    <PathGeometry x:Key="StlTextSGeometryV2" Figures="M 98,55 L 98,375 C 156,326 219,290 287,266 355,241 424,229 493,229 534,229 569,233 600,240 630,247 655,258 676,271 696,284 711,299 721,317 731,334 736,353 736,374 736,402 728,427 712,449 696,471 674,491 647,510 619,529 586,547 548,564 510,581 469,599 425,617 313,664 230,721 175,788 120,855 92,937 92,1032 92,1107 107,1171 137,1225 167,1278 208,1322 260,1357 311,1392 371,1417 439,1434 507,1450 579,1458 655,1458 730,1458 796,1454 854,1445 911,1436 964,1422 1013,1403 L 1013,1104 C 989,1121 963,1135 935,1148 906,1161 877,1171 847,1180 817,1188 787,1194 758,1198 728,1202 700,1204 673,1204 636,1204 603,1201 573,1194 543,1187 518,1177 497,1164 476,1151 460,1136 449,1119 438,1101 432,1081 432,1059 432,1035 438,1014 451,995 464,976 482,958 505,941 528,924 557,907 590,891 623,874 661,857 703,840 760,816 812,791 858,764 903,737 942,706 975,672 1008,638 1033,599 1050,556 1067,512 1076,461 1076,403 1076,323 1061,256 1031,202 1000,147 959,103 907,70 855,36 795,12 726,-3 657,-18 584,-25 507,-25 428,-25 354,-18 283,-5 212,8 150,28 98,55 Z">
+        <PathGeometry.Transform>
+            <TranslateTransform X="111" Y="462" />
+        </PathGeometry.Transform>
+    </PathGeometry>
+
+    <!--  STLテキストのGeometry (T) - SVGのフォント定義から  -->
+    <PathGeometry x:Key="StlTextTGeometryV2" Figures="M 1171,1171 L 762,1171 762,0 438,0 438,1171 31,1171 31,1434 1171,1434 1171,1171 Z">
+        <PathGeometry.Transform>
+            <TranslateTransform X="433" Y="462" />
+        </PathGeometry.Transform>
+    </PathGeometry>
+
+    <!--  STLテキストのGeometry (L) - SVGのフォント定義から  -->
+    <PathGeometry x:Key="StlTextLGeometryV2" Figures="M 1018,0 L 164,0 164,1434 487,1434 487,262 1018,262 1018,0 Z">
+        <PathGeometry.Transform>
+            <TranslateTransform X="713" Y="462" />
+        </PathGeometry.Transform>
+    </PathGeometry>
+
+    <!--  完全なSTLアイコン（色指定可能版、SVGベース）  -->
+    <ControlTemplate x:Key="StlIconTemplateV2">
+        <Viewbox>
+            <Canvas Width="1440" Height="1190">
+                <!--  文書アイコン  -->
+                <Path Data="{StaticResource StlDocumentGeometryV2}" Fill="{TemplateBinding Control.Foreground}" />
+
+                <!--  STLテキストの背景  -->
+                <Path Data="{StaticResource StlBackgroundGeometryV2}" 
+                      Fill="{TemplateBinding Control.Background}" 
+                      Stroke="{TemplateBinding Control.BorderBrush}" 
+                      StrokeThickness="18" 
+                      StrokeLineJoin="Round" />
+
+                <!--  STLテキスト - 簡易版（TextBlockを使用）  -->
+                <TextBlock
+                    Canvas.Left="111"
+                    Canvas.Top="462"
+                    FontFamily="Segoe UI"
+                    FontSize="494"
+                    FontWeight="Bold"
+                    Foreground="{TemplateBinding Control.BorderBrush}"
+                    Text="STL" />
+            </Canvas>
+        </Viewbox>
+    </ControlTemplate>
+
+</ResourceDictionary>
+
